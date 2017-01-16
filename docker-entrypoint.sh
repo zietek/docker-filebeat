@@ -22,11 +22,7 @@ for container in containers:
   }
 
   getContainerName() {
-    curl --no-buffer -s -XGET --unix-socket /tmp/docker.sock http:/containers/$1/json | python -c "
-import json, sys
-container=json.loads(sys.stdin.readline())
-print(container['Name'])
-" | sed 's;/;;'
+    curl --no-buffer -s -XGET --unix-socket /tmp/docker.sock http:/containers/$1/json | jq -r .Name  | sed 's;/;;'
   }
 
   createContainerFile() {
@@ -42,7 +38,7 @@ print(container['Name'])
     echo "Processing $CONTAINER..."
     createContainerFile $CONTAINER
     CONTAINER_NAME=`getContainerName $CONTAINER`
-    curl -s --no-buffer -XGET --unix-socket /tmp/docker.sock "http:/containers/$CONTAINER/logs?stderr=1&stdout=1&tail=1&follow=1" | sed "s;^;[$CONTAINER_NAME] ;" > $NAMED_PIPE
+    curl -s --no-buffer -XGET --unix-socket /tmp/docker.sock "http:/containers/$CONTAINER/logs?stderr=1&stdout=1&tail=1&follow=1" | awk -v name=$CONTAINER_NAME '{if(length($0)>1)print name " ";}' > $NAMED_PIPE
     echo "Disconnected from $CONTAINER."
     removeContainerFile $CONTAINER
   }
@@ -88,4 +84,3 @@ print(container['Name'])
 else
   exec "$@"
 fi
-
