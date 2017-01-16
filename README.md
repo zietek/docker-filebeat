@@ -1,3 +1,9 @@
+This repo is forked from bargenson/docker-filebeat. It resolves problem with multiple container name in logs. Script adds at the beginning of the log the container name (but only once :) )
+
+If you would like to have an machine host id instead of container id in every entry, you should run container with network=host option. 
+
+Below you can find a readme file from forked repository.
+
 # What is Filebeat?
 Filebeat is a lightweight, open source shipper for log file data. As the next-generation Logstash Forwarder, Filebeat tails logs and quickly sends this information to Logstash for further parsing and enrichment.
 
