@@ -1,5 +1,5 @@
 filebeat:
-  image: bargenson/filebeat:latest
+  image: zietek/filebeat:latest
   restart: unless-stopped
   volumes:
    - /var/run/docker.sock:/tmp/docker.sock
